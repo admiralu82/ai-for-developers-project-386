@@ -18,7 +18,7 @@ const DEFAULT_EVENT_TYPES = [
 ];
 
 function toISODateTime(dateISO: string, timeHHMM: string): string {
-  return new Date(`${dateISO}T${timeHHMM}:00`).toISOString();
+  return new Date(`${dateISO}T${timeHHMM}:00Z`).toISOString();
 }
 
 test.describe('4.6 API-проверки (P0)', () => {

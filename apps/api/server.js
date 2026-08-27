@@ -1,3 +1,5 @@
+process.env.TZ = 'UTC';
+
 import express from 'express';
 import cors from 'cors';
 import { randomUUID } from 'crypto';
@@ -20,7 +22,6 @@ import { config, defaultEventTypes } from '../config.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-process.env.TZ = 'Europe/Moscow';
 
 app.use(cors());
 app.use(express.json());
@@ -50,10 +51,10 @@ function addMinutes(date, minutes) {
   return new Date(date.getTime() + minutes * 60000);
 }
 
-function isSameDay(date1, date2) {
-  return date1.getFullYear() === date2.getFullYear() &&
-         date1.getMonth() === date2.getMonth() &&
-         date1.getDate() === date2.getDate();
+function isSameDayUTC(date1, date2) {
+  return date1.getUTCFullYear() === date2.getUTCFullYear() &&
+         date1.getUTCMonth() === date2.getUTCMonth() &&
+         date1.getUTCDate() === date2.getUTCDate();
 }
 
 function hasTimeOverlap(start1, end1, start2, end2) {
@@ -206,7 +207,7 @@ app.get('/api/events', async (req, res) => {
           message: 'Invalid date format' 
         });
       }
-      events = events.filter(event => isSameDay(parseDate(event.startTime), filterDate));
+      events = events.filter(event => isSameDayUTC(parseDate(event.startTime), filterDate));
     }
 
     res.json(events);
@@ -254,10 +255,14 @@ app.post('/api/events', async (req, res) => {
     const start = parseDate(startTime);
     const now = new Date();
 
-    // Check if booking is within allowed time frame
-    const maxDate = new Date(now);
-    maxDate.setDate(maxDate.getDate() + config.maxBookingDaysAhead);
-    
+    // Check if booking is within allowed time frame (UTC day boundary)
+    const maxDate = new Date(Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      now.getUTCDate() + config.maxBookingDaysAhead,
+      23, 59, 59, 999
+    ));
+
     if (start < now) {
       return res.status(400).json({ 
         code: 'VALIDATION_ERROR', 
@@ -272,8 +277,8 @@ app.post('/api/events', async (req, res) => {
       });
     }
 
-    // Check working hours
-    const hour = start.getHours();
+    // Check working hours (UTC)
+    const hour = start.getUTCHours();
     if (hour < config.workingHours.start || hour >= config.workingHours.end) {
       return res.status(400).json({ 
         code: 'VALIDATION_ERROR', 
@@ -367,7 +372,8 @@ app.put('/api/events/:eventId', async (req, res) => {
       });
     }
 
-    const updatedEvent = await updateEvent(eventId, { eventTypeId, title, startTime, comment });
+    const normalizedStartTime = parseDate(startTime).toISOString();
+    const updatedEvent = await updateEvent(eventId, { eventTypeId, title, startTime: normalizedStartTime, comment });
 
     if (!updatedEvent) {
       return res.status(404).json({ 
@@ -432,9 +438,9 @@ app.get('/api/available-slots', async (req, res) => {
     const targetDate = parseDate(date);
     const events = await getEvents();
 
-    // Filter events for the target date
+    // Filter events for the target date (UTC)
     const dayEvents = events.filter(event => 
-      isSameDay(parseDate(event.startTime), targetDate)
+      isSameDayUTC(parseDate(event.startTime), targetDate)
     );
 
     // Generate all possible time slots
@@ -444,13 +450,17 @@ app.get('/api/available-slots', async (req, res) => {
     
     for (let hour = startHour; hour < endHour; hour++) {
       for (let minute = 0; minute < 60; minute += config.timeSlotInterval) {
-        const slotStart = new Date(targetDate);
-        slotStart.setHours(hour, minute, 0, 0);
+        const slotStart = new Date(Date.UTC(
+          targetDate.getUTCFullYear(),
+          targetDate.getUTCMonth(),
+          targetDate.getUTCDate(),
+          hour, minute, 0, 0
+        ));
         const slotEnd = addMinutes(slotStart, eventType.durationMinutes);
 
-        // Check if slot extends beyond working hours
-        if (slotEnd.getHours() > endHour || 
-            (slotEnd.getHours() === endHour && slotEnd.getMinutes() > 0)) {
+        // Check if slot extends beyond working hours (UTC)
+        if (slotEnd.getUTCHours() > endHour || 
+            (slotEnd.getUTCHours() === endHour && slotEnd.getUTCMinutes() > 0)) {
           continue;
         }
 

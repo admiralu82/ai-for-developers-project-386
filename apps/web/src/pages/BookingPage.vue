@@ -12,15 +12,23 @@ const loading = ref(false);
 const error = ref('');
 const success = ref(false);
 
-const minDate = computed(() => {
-  const today = new Date();
-  return today.toISOString().split('T')[0];
-});
+function toDateInputValue(date) {
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+const minDate = computed(() => toDateInputValue(new Date()));
 
 const maxDate = computed(() => {
   const today = new Date();
-  today.setDate(today.getDate() + 14);
-  return today.toISOString().split('T')[0];
+  const max = new Date(Date.UTC(
+    today.getUTCFullYear(),
+    today.getUTCMonth(),
+    today.getUTCDate() + 14
+  ));
+  return toDateInputValue(max);
 });
 
 onMounted(async () => {
@@ -57,12 +65,12 @@ function selectEventType(type) {
 
 function formatTime(dateString) {
   const date = new Date(dateString);
-  return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+  return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
 }
 
 function formatDate(dateString) {
   const date = new Date(dateString);
-  return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+  return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 }
 
 async function bookEvent() {

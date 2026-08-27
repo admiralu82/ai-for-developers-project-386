@@ -14,7 +14,8 @@ RUN npm run build
 FROM node:22-alpine
 ENV NODE_ENV=production \
     PORT=3000 \
-    DATA_DIR=/data
+    DATA_DIR=/data \
+    TZ=UTC
 WORKDIR /app
 
 COPY apps/api/package.json apps/api/package-lock.json apps/api/
