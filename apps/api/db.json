@@ -1,0 +1,58 @@
+[
+  {
+    "eventId": "f6ba5500-f5ce-40b8-a899-23cc5c843c34",
+    "eventTypeId": "6f996470-1f35-4ccc-90c7-bc76367795f0",
+    "title": "Консультация",
+    "startTime": "2026-08-30T10:00:00.000Z",
+    "comment": "Автотест SLOT-02"
+  },
+  {
+    "eventId": "3513e9a2-e223-4947-8d36-183c9e55947e",
+    "eventTypeId": "6f996470-1f35-4ccc-90c7-bc76367795f0",
+    "title": "Консультация",
+    "startTime": "2026-08-30T08:00:00.000Z",
+    "comment": "Иван Тестов, +7 900 000-00-02"
+  },
+  {
+    "eventId": "53ef5474-5547-4e27-b4e6-5dd54657ddf1",
+    "eventTypeId": "d443fe36-3eda-4448-9b7f-71417b1472bc",
+    "title": "Короткая встреча",
+    "startTime": "2026-08-30T14:30:00.000Z",
+    "comment": "Иван Тестов, +7 900 000-00-04"
+  },
+  {
+    "eventId": "5a481f78-7d26-4a48-81f6-e456def51288",
+    "eventTypeId": "6f996470-1f35-4ccc-90c7-bc76367795f0",
+    "title": "Консультация",
+    "startTime": "2026-08-30T12:00:00.000Z",
+    "comment": "Автотест BOOK-05 (API)"
+  },
+  {
+    "eventId": "d90aab71-9ed6-484d-b33b-d1ed357ebb73",
+    "eventTypeId": "6f996470-1f35-4ccc-90c7-bc76367795f0",
+    "title": "Консультация",
+    "startTime": "2026-08-30T06:00:00.000Z",
+    "comment": "Иван Тестов, +7 900 000-00-01"
+  },
+  {
+    "eventId": "b5193e28-fffa-4e11-92b5-7a1560818f4f",
+    "eventTypeId": "6f996470-1f35-4ccc-90c7-bc76367795f0",
+    "title": "Консультация",
+    "startTime": "2026-08-31T06:00:00.000Z",
+    "comment": "Автотест API-02"
+  },
+  {
+    "eventId": "4b16b2cd-fc59-40da-8916-bfcfe4b792b5",
+    "eventTypeId": "6f996470-1f35-4ccc-90c7-bc76367795f0",
+    "title": "Консультация",
+    "startTime": "2026-08-31T07:00:00.000Z",
+    "comment": "Автотест API-04"
+  },
+  {
+    "eventId": "119baea8-06c0-425a-8432-69b2d3e2dceb",
+    "eventTypeId": "6f996470-1f35-4ccc-90c7-bc76367795f0",
+    "title": "Консультация",
+    "startTime": "2026-08-31T08:00:00.000Z",
+    "comment": "Автотест API-04"
+  }
+]
