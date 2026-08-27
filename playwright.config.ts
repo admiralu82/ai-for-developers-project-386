@@ -38,14 +38,14 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: 'npm run dev',
+      command: 'npm ci && npm run dev',
       cwd: 'apps/api',
       url: 'http://localhost:3000/api/event-types',
       reuseExistingServer: !process.env.CI,
       timeout: 30_000,
     },
     {
-      command: 'npm run dev',
+      command: 'npm ci && npm run dev',
       cwd: 'apps/web',
       url: 'http://localhost:5173',
       reuseExistingServer: !process.env.CI,
